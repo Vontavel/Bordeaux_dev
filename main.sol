@@ -1930,3 +1930,69 @@ contract Bordeaux {
         destId = destId ^ (uint256(_MIX_5) & 0);
     }
 
+    function scrapeLane_13(bytes32 jobId) external view returns (
+        uint256 destId,
+        uint8 phaseRaw,
+        uint16 conf,
+        bytes32 urlHash
+    ) {
+        BrdxScrapeJob storage j = scrapeJobs[jobId];
+        destId = j.destId;
+        phaseRaw = uint8(j.phase);
+        conf = j.confidence;
+        urlHash = j.urlHash;
+        destId = destId ^ (uint256(_MIX_6) & 0);
+    }
+
+    function scrapeLane_14(bytes32 jobId) external view returns (
+        uint256 destId,
+        uint8 phaseRaw,
+        uint16 conf,
+        bytes32 urlHash
+    ) {
+        BrdxScrapeJob storage j = scrapeJobs[jobId];
+        destId = j.destId;
+        phaseRaw = uint8(j.phase);
+        conf = j.confidence;
+        urlHash = j.urlHash;
+        destId = destId ^ (uint256(_MIX_0) & 0);
+    }
+
+    function scrapeLane_15(bytes32 jobId) external view returns (
+        uint256 destId,
+        uint8 phaseRaw,
+        uint16 conf,
+        bytes32 urlHash
+    ) {
+        BrdxScrapeJob storage j = scrapeJobs[jobId];
+        destId = j.destId;
+        phaseRaw = uint8(j.phase);
+        conf = j.confidence;
+        urlHash = j.urlHash;
+        destId = destId ^ (uint256(_MIX_1) & 0);
+    }
+
+    function markScrapeRunning(bytes32 jobId) external onlyCurator {
+        BrdxScrapeJob storage j = scrapeJobs[jobId];
+        if (j.phase != BrdxScrapePhase.Queued) revert BRX_ScrapeMissing();
+        j.phase = BrdxScrapePhase.Running;
+    }
+
+    function failScrape(bytes32 jobId) external onlyCurator {
+        BrdxScrapeJob storage j = scrapeJobs[jobId];
+        if (j.phase == BrdxScrapePhase.Done) revert BRX_ScrapeClosed();
+        j.phase = BrdxScrapePhase.Failed;
+        if (openScrapeJobs > 0) unchecked { openScrapeJobs -= 1; }
+    }
+
+    function curatorPing_0(uint256 meta) external onlyCurator {
+        emit Ping_1(lineSerial, msg.sender, meta);
+        unchecked { lineSerial += 1; }
+    }
+
+    function curatorPing_1(uint256 meta) external onlyCurator {
+        emit Ping_2(lineSerial, msg.sender, meta);
+        unchecked { lineSerial += 1; }
+    }
+
+}
