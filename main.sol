@@ -166,3 +166,87 @@ contract Bordeaux {
     uint256 public activeEpoch;
     uint256 public lineSerial;
     uint256 public openScrapeJobs;
+    uint256 public totalTipsWei;
+    uint256 public genesisBlock;
+
+    mapping(uint256 => BrdxDestination) public destinations;
+    mapping(bytes32 => BrdxReview) public reviews;
+    mapping(bytes32 => BrdxScrapeJob) public scrapeJobs;
+    mapping(bytes32 => BrdxInsightCell) public insights;
+    mapping(uint256 => BrdxEpochRail) public epochRails;
+    mapping(uint256 => mapping(address => uint256)) public reviewerRep;
+    mapping(bytes32 => mapping(address => bool)) public voteCast;
+    mapping(bytes32 => bool) public reviewIdUsed;
+    mapping(bytes32 => bool) public scrapeIdUsed;
+    mapping(bytes32 => bool) public insightIdUsed;
+    mapping(address => bytes32[]) private _reviewsByAuthor;
+    uint256 private _guard;
+
+    modifier nonReentrant() {
+        if (_guard == 2) revert BRX_Reentered();
+        _guard = 2;
+        _;
+        _guard = 1;
+    }
+
+    modifier onlyCurator() {
+        if (msg.sender != curator) revert BRX_NotCurator();
+        _;
+    }
+
+    modifier whenLaneLive() {
+        if (lanePaused) revert BRX_LanePaused();
+        _;
+    }
+
+    constructor(address curator_) {
+        if (curator_ == address(0)) revert BRX_ZeroAddr();
+        ADDRESS_A = 0x4fE0796a76b797746f0D84e8c41C76364248a79b;
+        ADDRESS_B = 0xBc45912d32d3C004a2f8af7Ca7146F67b4524c33;
+        ADDRESS_C = 0xA00c6a6235dA5Ceb2Da44153799ca7B0128Ec2B9;
+        curator = curator_;
+        _guard = 1;
+        genesisBlock = block.number;
+        activeEpoch = 1;
+        _primeEpoch(1);
+        _seedDestinations();
+    }
+
+    function nominateCurator(address next_) external onlyCurator {
+        if (next_ == address(0)) revert BRX_BadHandoff();
+        pendingCurator = next_;
+        emit Nominated(curator, next_);
+    }
+
+    function acceptCuratorRole() external {
+        if (msg.sender != pendingCurator) revert BRX_NoHandoff();
+        address prev = curator;
+        curator = pendingCurator;
+        pendingCurator = address(0);
+        emit Swapped(prev, curator);
+    }
+
+    function setLanePaused(bool v) external onlyCurator {
+        lanePaused = v;
+        emit Paused(v, msg.sender);
+    }
+
+    function advanceEpoch() external onlyCurator whenLaneLive {
+        uint256 n = activeEpoch + 1;
+        if (n > 38) revert BRX_BadEpoch();
+        activeEpoch = n;
+        _primeEpoch(n);
+        emit Shifted(n, uint64(block.timestamp), _epochReviewWeight());
+    }
+
+    function retireDestination(uint256 destId) external onlyCurator {
+        BrdxDestination storage d = destinations[destId];
+        if (d.phase == BrdxDestPhase.Draft) revert BRX_DestMissing();
+        d.phase = BrdxDestPhase.Archived;
+    }
+
+    function postReview(
+        bytes32 reviewId,
+        uint256 destId,
+        bytes32 bodyHash,
+        uint8 stars
