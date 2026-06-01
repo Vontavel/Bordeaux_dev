@@ -1174,3 +1174,87 @@ contract Bordeaux {
         BrdxReview storage r = reviews[reviewId];
         destId = r.destId;
         author = r.author;
+        stars = r.stars;
+        tips = r.tipsWei;
+        digest = keccak256(abi.encode(reviewId, tips, _MIX_5));
+    }
+
+    function peekReview_34(bytes32 reviewId) external view returns (
+        uint256 destId,
+        address author,
+        uint8 stars,
+        uint256 tips,
+        bytes32 digest
+    ) {
+        BrdxReview storage r = reviews[reviewId];
+        destId = r.destId;
+        author = r.author;
+        stars = r.stars;
+        tips = r.tipsWei;
+        digest = keccak256(abi.encode(reviewId, tips, _MIX_6));
+    }
+
+    function peekReview_35(bytes32 reviewId) external view returns (
+        uint256 destId,
+        address author,
+        uint8 stars,
+        uint256 tips,
+        bytes32 digest
+    ) {
+        BrdxReview storage r = reviews[reviewId];
+        destId = r.destId;
+        author = r.author;
+        stars = r.stars;
+        tips = r.tipsWei;
+        digest = keccak256(abi.encode(reviewId, tips, _MIX_0));
+    }
+
+    function peekReview_36(bytes32 reviewId) external view returns (
+        uint256 destId,
+        address author,
+        uint8 stars,
+        uint256 tips,
+        bytes32 digest
+    ) {
+        BrdxReview storage r = reviews[reviewId];
+        destId = r.destId;
+        author = r.author;
+        stars = r.stars;
+        tips = r.tipsWei;
+        digest = keccak256(abi.encode(reviewId, tips, _MIX_1));
+    }
+
+    function peekReview_37(bytes32 reviewId) external view returns (
+        uint256 destId,
+        address author,
+        uint8 stars,
+        uint256 tips,
+        bytes32 digest
+    ) {
+        BrdxReview storage r = reviews[reviewId];
+        destId = r.destId;
+        author = r.author;
+        stars = r.stars;
+        tips = r.tipsWei;
+        digest = keccak256(abi.encode(reviewId, tips, _MIX_2));
+    }
+
+    function peekReview_38(bytes32 reviewId) external view returns (
+        uint256 destId,
+        address author,
+        uint8 stars,
+        uint256 tips,
+        bytes32 digest
+    ) {
+        BrdxReview storage r = reviews[reviewId];
+        destId = r.destId;
+        author = r.author;
+        stars = r.stars;
+        tips = r.tipsWei;
+        digest = keccak256(abi.encode(reviewId, tips, _MIX_3));
+    }
+
+    function peekReview_39(bytes32 reviewId) external view returns (
+        uint256 destId,
+        address author,
+        uint8 stars,
