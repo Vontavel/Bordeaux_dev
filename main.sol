@@ -82,3 +82,87 @@ contract Bordeaux {
     event Ping_3(uint256 indexed lineId, address indexed actor, uint256 meta);
     event Ping_4(uint256 indexed lineId, address indexed actor, uint256 meta);
     event Ping_5(uint256 indexed lineId, address indexed actor, uint256 meta);
+    event Ping_6(uint256 indexed lineId, address indexed actor, uint256 meta);
+    event Ping_7(uint256 indexed lineId, address indexed actor, uint256 meta);
+    event Ping_8(uint256 indexed lineId, address indexed actor, uint256 meta);
+
+    enum BrdxDestPhase { Draft, Live, Archived }
+    enum BrdxScrapePhase { Queued, Running, Done, Failed }
+
+    struct BrdxDestination {
+        BrdxDestPhase phase;
+        uint8 tierBand;
+        uint64 openedAt;
+        uint32 reviewCount;
+        uint32 scrapeCount;
+        uint256 reputationSum;
+        bytes32 placeTag;
+    }
+
+    struct BrdxReview {
+        uint256 destId;
+        address author;
+        bytes32 bodyHash;
+        uint8 stars;
+        uint32 upVotes;
+        uint32 downVotes;
+        uint256 tipsWei;
+        uint64 postedAt;
+        bool exists;
+    }
+
+    struct BrdxScrapeJob {
+        uint256 destId;
+        address requester;
+        bytes32 urlHash;
+        BrdxScrapePhase phase;
+        bytes32 resultHash;
+        uint16 confidence;
+        uint64 queuedAt;
+    }
+
+    struct BrdxInsightCell {
+        uint256 destId;
+        bytes32 modelTag;
+        bytes32 summaryHash;
+        uint16 confidence;
+        uint64 stampedAt;
+    }
+
+    struct BrdxEpochRail {
+        uint64 startedAt;
+        uint256 reviewWeight;
+        uint256 scrapeWeight;
+        bytes32 mixHA;
+        bytes32 mixHB;
+    }
+
+    uint256 public constant BRDX_STAR_MAX = 8;
+    uint256 public constant BRDX_REVIEW_FEE = 0.003 ether;
+    uint256 public constant BRDX_SCRAPE_FEE = 0.003 ether;
+    uint256 public constant BRDX_MAX_REVIEWS = 120;
+    uint256 public constant BRDX_SCRAPE_OPEN_CAP = 67;
+    uint256 public constant BRDX_CONF_FLOOR = 403;
+    uint256 public constant BRDX_CONF_CEIL = 9066;
+    uint256 public constant BRDX_EPOCH_BLOCKS = 544;
+    uint256 public constant BRDX_REP_CAP = 13543;
+
+    bytes32 private constant _MIX_0 = 0x75919a55fe8f548f53b2503c4c700ba12213deb0c3549528d4474f5ac199c1d4;
+    bytes32 private constant _MIX_1 = 0xdbba9d86e72c3c4522dca7e9c008a46bf851c859f8fa3a48867f12921d6b5ea9;
+    bytes32 private constant _MIX_2 = 0xd5a7abe55fcdbf13f6102dc690de5b7865ace4678ca26fc0eb7d7c82c0d938cc;
+    bytes32 private constant _MIX_3 = 0xa80fa76e45e3cdc6c58b0c14ee6b3520a922fbedf5b0f5ee25a478102072c7d9;
+    bytes32 private constant _MIX_4 = 0xa33cb156510ec1ee095c44c6cc250805301b5ca372a3dfe7b747251fa966b2d1;
+    bytes32 private constant _MIX_5 = 0x358df167d58b1b987967b344e3e4b85a02feb445203543212fe4857e1d07de8b;
+    bytes32 private constant _MIX_6 = 0x32877145e65bd7fc4e0b0a893f01c81c221f5fe840471eb2d5b50ec43b3ae3d7;
+    bytes32 private constant BRDX_DOMAIN = keccak256("Bordeaux.velvetAtlasCrawl");
+
+    address public immutable ADDRESS_A;
+    address public immutable ADDRESS_B;
+    address public immutable ADDRESS_C;
+
+    address public curator;
+    address public pendingCurator;
+    bool public lanePaused;
+    uint256 public activeEpoch;
+    uint256 public lineSerial;
+    uint256 public openScrapeJobs;
