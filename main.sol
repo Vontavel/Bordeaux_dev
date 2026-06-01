@@ -502,3 +502,87 @@ contract Bordeaux {
             openedAt: uint64(block.timestamp),
             reviewCount: 0,
             scrapeCount: 0,
+            reputationSum: 173,
+            placeTag: 0xa80fa76e45e3cdc6c58b0c14ee6b3520a922fbedf5b0f5ee25a478102072c7d9
+        });
+        emit Opened(10, 0xa80fa76e45e3cdc6c58b0c14ee6b3520a922fbedf5b0f5ee25a478102072c7d9, uint8(2));
+        destinations[11] = BrdxDestination({
+            phase: BrdxDestPhase.Live,
+            tierBand: uint8(3),
+            openedAt: uint64(block.timestamp),
+            reviewCount: 0,
+            scrapeCount: 0,
+            reputationSum: 190,
+            placeTag: 0xa33cb156510ec1ee095c44c6cc250805301b5ca372a3dfe7b747251fa966b2d1
+        });
+        emit Opened(11, 0xa33cb156510ec1ee095c44c6cc250805301b5ca372a3dfe7b747251fa966b2d1, uint8(3));
+        destinations[12] = BrdxDestination({
+            phase: BrdxDestPhase.Live,
+            tierBand: uint8(4),
+            openedAt: uint64(block.timestamp),
+            reviewCount: 0,
+            scrapeCount: 0,
+            reputationSum: 207,
+            placeTag: 0x358df167d58b1b987967b344e3e4b85a02feb445203543212fe4857e1d07de8b
+        });
+        emit Opened(12, 0x358df167d58b1b987967b344e3e4b85a02feb445203543212fe4857e1d07de8b, uint8(4));
+        destinations[13] = BrdxDestination({
+            phase: BrdxDestPhase.Live,
+            tierBand: uint8(5),
+            openedAt: uint64(block.timestamp),
+            reviewCount: 0,
+            scrapeCount: 0,
+            reputationSum: 224,
+            placeTag: 0x32877145e65bd7fc4e0b0a893f01c81c221f5fe840471eb2d5b50ec43b3ae3d7
+        });
+        emit Opened(13, 0x32877145e65bd7fc4e0b0a893f01c81c221f5fe840471eb2d5b50ec43b3ae3d7, uint8(5));
+        destinations[14] = BrdxDestination({
+            phase: BrdxDestPhase.Live,
+            tierBand: uint8(2),
+            openedAt: uint64(block.timestamp),
+            reviewCount: 0,
+            scrapeCount: 0,
+            reputationSum: 241,
+            placeTag: 0x75919a55fe8f548f53b2503c4c700ba12213deb0c3549528d4474f5ac199c1d4
+        });
+        emit Opened(14, 0x75919a55fe8f548f53b2503c4c700ba12213deb0c3549528d4474f5ac199c1d4, uint8(2));
+        destinations[15] = BrdxDestination({
+            phase: BrdxDestPhase.Live,
+            tierBand: uint8(3),
+            openedAt: uint64(block.timestamp),
+            reviewCount: 0,
+            scrapeCount: 0,
+            reputationSum: 258,
+            placeTag: 0xdbba9d86e72c3c4522dca7e9c008a46bf851c859f8fa3a48867f12921d6b5ea9
+        });
+        emit Opened(15, 0xdbba9d86e72c3c4522dca7e9c008a46bf851c859f8fa3a48867f12921d6b5ea9, uint8(3));
+        destinations[16] = BrdxDestination({
+            phase: BrdxDestPhase.Live,
+            tierBand: uint8(4),
+            openedAt: uint64(block.timestamp),
+            reviewCount: 0,
+            scrapeCount: 0,
+            reputationSum: 275,
+            placeTag: 0xd5a7abe55fcdbf13f6102dc690de5b7865ace4678ca26fc0eb7d7c82c0d938cc
+        });
+        emit Opened(16, 0xd5a7abe55fcdbf13f6102dc690de5b7865ace4678ca26fc0eb7d7c82c0d938cc, uint8(4));
+        destinations[17] = BrdxDestination({
+            phase: BrdxDestPhase.Live,
+            tierBand: uint8(1),
+            openedAt: uint64(block.timestamp),
+            reviewCount: 0,
+            scrapeCount: 0,
+            reputationSum: 292,
+            placeTag: 0xa80fa76e45e3cdc6c58b0c14ee6b3520a922fbedf5b0f5ee25a478102072c7d9
+        });
+        emit Opened(17, 0xa80fa76e45e3cdc6c58b0c14ee6b3520a922fbedf5b0f5ee25a478102072c7d9, uint8(1));
+        destinations[18] = BrdxDestination({
+            phase: BrdxDestPhase.Live,
+            tierBand: uint8(2),
+            openedAt: uint64(block.timestamp),
+            reviewCount: 0,
+            scrapeCount: 0,
+            reputationSum: 309,
+            placeTag: 0xa33cb156510ec1ee095c44c6cc250805301b5ca372a3dfe7b747251fa966b2d1
+        });
+        emit Opened(18, 0xa33cb156510ec1ee095c44c6cc250805301b5ca372a3dfe7b747251fa966b2d1, uint8(2));
