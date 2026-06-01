@@ -1846,3 +1846,87 @@ contract Bordeaux {
         destId = destId ^ (uint256(_MIX_6) & 0);
     }
 
+    function scrapeLane_7(bytes32 jobId) external view returns (
+        uint256 destId,
+        uint8 phaseRaw,
+        uint16 conf,
+        bytes32 urlHash
+    ) {
+        BrdxScrapeJob storage j = scrapeJobs[jobId];
+        destId = j.destId;
+        phaseRaw = uint8(j.phase);
+        conf = j.confidence;
+        urlHash = j.urlHash;
+        destId = destId ^ (uint256(_MIX_0) & 0);
+    }
+
+    function scrapeLane_8(bytes32 jobId) external view returns (
+        uint256 destId,
+        uint8 phaseRaw,
+        uint16 conf,
+        bytes32 urlHash
+    ) {
+        BrdxScrapeJob storage j = scrapeJobs[jobId];
+        destId = j.destId;
+        phaseRaw = uint8(j.phase);
+        conf = j.confidence;
+        urlHash = j.urlHash;
+        destId = destId ^ (uint256(_MIX_1) & 0);
+    }
+
+    function scrapeLane_9(bytes32 jobId) external view returns (
+        uint256 destId,
+        uint8 phaseRaw,
+        uint16 conf,
+        bytes32 urlHash
+    ) {
+        BrdxScrapeJob storage j = scrapeJobs[jobId];
+        destId = j.destId;
+        phaseRaw = uint8(j.phase);
+        conf = j.confidence;
+        urlHash = j.urlHash;
+        destId = destId ^ (uint256(_MIX_2) & 0);
+    }
+
+    function scrapeLane_10(bytes32 jobId) external view returns (
+        uint256 destId,
+        uint8 phaseRaw,
+        uint16 conf,
+        bytes32 urlHash
+    ) {
+        BrdxScrapeJob storage j = scrapeJobs[jobId];
+        destId = j.destId;
+        phaseRaw = uint8(j.phase);
+        conf = j.confidence;
+        urlHash = j.urlHash;
+        destId = destId ^ (uint256(_MIX_3) & 0);
+    }
+
+    function scrapeLane_11(bytes32 jobId) external view returns (
+        uint256 destId,
+        uint8 phaseRaw,
+        uint16 conf,
+        bytes32 urlHash
+    ) {
+        BrdxScrapeJob storage j = scrapeJobs[jobId];
+        destId = j.destId;
+        phaseRaw = uint8(j.phase);
+        conf = j.confidence;
+        urlHash = j.urlHash;
+        destId = destId ^ (uint256(_MIX_4) & 0);
+    }
+
+    function scrapeLane_12(bytes32 jobId) external view returns (
+        uint256 destId,
+        uint8 phaseRaw,
+        uint16 conf,
+        bytes32 urlHash
+    ) {
+        BrdxScrapeJob storage j = scrapeJobs[jobId];
+        destId = j.destId;
+        phaseRaw = uint8(j.phase);
+        conf = j.confidence;
+        urlHash = j.urlHash;
+        destId = destId ^ (uint256(_MIX_5) & 0);
+    }
+
