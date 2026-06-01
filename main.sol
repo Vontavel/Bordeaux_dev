@@ -250,3 +250,87 @@ contract Bordeaux {
         uint256 destId,
         bytes32 bodyHash,
         uint8 stars
+    ) external payable nonReentrant whenLaneLive {
+        if (reviewId == bytes32(0)) revert BRX_DigestVoid();
+        if (reviewIdUsed[reviewId]) revert BRX_ReviewExists();
+        if (msg.value < BRDX_REVIEW_FEE) revert BRX_TipTooSmall();
+        if (stars == 0 || stars > BRDX_STAR_MAX) revert BRX_StarOutOfRange();
+        BrdxDestination storage d = destinations[destId];
+        if (d.phase != BrdxDestPhase.Live) revert BRX_DestRetired();
+        if (d.reviewCount >= BRDX_MAX_REVIEWS) revert BRX_CapHit();
+        reviewIdUsed[reviewId] = true;
+        reviews[reviewId] = BrdxReview({
+            destId: destId,
+            author: msg.sender,
+            bodyHash: bodyHash,
+            stars: stars,
+            upVotes: 0,
+            downVotes: 0,
+            tipsWei: msg.value,
+            postedAt: uint64(block.timestamp),
+            exists: true
+        });
+        unchecked {
+            d.reviewCount += 1;
+            d.reputationSum = BrdxMath.saturatingAdd(d.reputationSum, uint256(stars) * 100, BRDX_REP_CAP);
+        }
+        reviewerRep[activeEpoch][msg.sender] += uint256(stars) * 10;
+        totalTipsWei += msg.value;
+        _reviewsByAuthor[msg.sender].push(reviewId);
+        emit Posted(reviewId, destId, msg.sender, stars);
+    }
+
+    function castVote(bytes32 reviewId, bool up) external whenLaneLive {
+        BrdxReview storage r = reviews[reviewId];
+        if (!r.exists) revert BRX_ReviewMissing();
+        if (r.author == msg.sender) revert BRX_SelfVote();
+        if (voteCast[reviewId][msg.sender]) revert BRX_AlreadyVoted();
+        voteCast[reviewId][msg.sender] = true;
+        if (up) unchecked { r.upVotes += 1; }
+        else unchecked { r.downVotes += 1; }
+        emit Voted(reviewId, msg.sender, up);
+    }
+
+    function tipReview(bytes32 reviewId) external payable nonReentrant whenLaneLive {
+        if (msg.value == 0) revert BRX_ZeroAmt();
+        BrdxReview storage r = reviews[reviewId];
+        if (!r.exists) revert BRX_ReviewMissing();
+        r.tipsWei += msg.value;
+        totalTipsWei += msg.value;
+        _sendNative(r.author, msg.value);
+        emit Tipped(reviewId, msg.sender, msg.value);
+    }
+
+    function queueScrape(bytes32 jobId, uint256 destId, bytes32 urlHash)
+        external
+        payable
+        nonReentrant
+        whenLaneLive
+    {
+        if (jobId == bytes32(0)) revert BRX_DigestVoid();
+        if (scrapeIdUsed[jobId]) revert BRX_ScrapeOpen();
+        if (msg.value < BRDX_SCRAPE_FEE) revert BRX_TipTooSmall();
+        if (openScrapeJobs >= BRDX_SCRAPE_OPEN_CAP) revert BRX_CapHit();
+        BrdxDestination storage d = destinations[destId];
+        if (d.phase != BrdxDestPhase.Live) revert BRX_DestRetired();
+        scrapeIdUsed[jobId] = true;
+        scrapeJobs[jobId] = BrdxScrapeJob({
+            destId: destId,
+            requester: msg.sender,
+            urlHash: urlHash,
+            phase: BrdxScrapePhase.Queued,
+            resultHash: bytes32(0),
+            confidence: 0,
+            queuedAt: uint64(block.timestamp)
+        });
+        unchecked {
+            openScrapeJobs += 1;
+            d.scrapeCount += 1;
+        }
+        emit Scraped(jobId, destId, urlHash);
+    }
+
+    function sealScrape(bytes32 jobId, bytes32 payloadHash, uint16 confidence) external onlyCurator {
+        BrdxScrapeJob storage j = scrapeJobs[jobId];
+        if (j.phase != BrdxScrapePhase.Queued && j.phase != BrdxScrapePhase.Running) revert BRX_ScrapeClosed();
+        if (confidence < BRDX_CONF_FLOOR) revert BRX_ConfLow();
