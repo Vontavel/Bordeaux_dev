@@ -334,3 +334,87 @@ contract Bordeaux {
         BrdxScrapeJob storage j = scrapeJobs[jobId];
         if (j.phase != BrdxScrapePhase.Queued && j.phase != BrdxScrapePhase.Running) revert BRX_ScrapeClosed();
         if (confidence < BRDX_CONF_FLOOR) revert BRX_ConfLow();
+        if (confidence > BRDX_CONF_CEIL) revert BRX_ConfHigh();
+        j.phase = BrdxScrapePhase.Done;
+        j.resultHash = payloadHash;
+        j.confidence = confidence;
+        if (openScrapeJobs > 0) unchecked { openScrapeJobs -= 1; }
+        emit Sealed(jobId, payloadHash, confidence);
+    }
+
+    function publishInsight(
+        bytes32 insightId,
+        uint256 destId,
+        bytes32 modelTag,
+        bytes32 summaryHash,
+        uint16 confidence
+    ) external onlyCurator whenLaneLive {
+        if (insightIdUsed[insightId]) revert BRX_InsightStale();
+        if (confidence < BRDX_CONF_FLOOR) revert BRX_ConfLow();
+        if (confidence > BRDX_CONF_CEIL) revert BRX_ConfHigh();
+        BrdxDestination storage d = destinations[destId];
+        if (d.phase != BrdxDestPhase.Live) revert BRX_DestRetired();
+        insightIdUsed[insightId] = true;
+        insights[insightId] = BrdxInsightCell({
+            destId: destId,
+            modelTag: modelTag,
+            summaryHash: summaryHash,
+            confidence: confidence,
+            stampedAt: uint64(block.timestamp)
+        });
+        emit Inferred(insightId, destId, confidence);
+    }
+
+    function fundInsightPool() external payable whenLaneLive {
+        if (msg.value == 0) revert BRX_ZeroAmt();
+        emit Ping_0(lineSerial, msg.sender, msg.value);
+        unchecked { lineSerial += 1; }
+    }
+
+    function _sendNative(address to, uint256 amt) internal {
+        (bool ok, ) = to.call{value: amt}("");
+        if (!ok) revert BRX_TransferFail();
+    }
+
+    function _primeEpoch(uint256 epochId) internal {
+        BrdxEpochRail storage e = epochRails[epochId];
+        e.startedAt = uint64(block.timestamp);
+        e.reviewWeight = _epochReviewWeight();
+        e.scrapeWeight = openScrapeJobs;
+        (e.mixHA, e.mixHB) = _splitMix(epochId, e.reviewWeight, e.scrapeWeight);
+    }
+
+    function _splitMix(uint256 epochId, uint256 rw, uint256 sw)
+        internal
+        view
+        returns (bytes32 hA, bytes32 hB)
+    {
+        hA = keccak256(abi.encode(BRDX_DOMAIN, epochId, rw, ADDRESS_A, _MIX_0));
+        hB = keccak256(abi.encode(sw, epochId, ADDRESS_B, _MIX_1, BRDX_EPOCH_BLOCKS));
+    }
+
+    function reviewDigest(bytes32 reviewId) public view returns (bytes32) {
+        BrdxReview storage r = reviews[reviewId];
+        (bytes32 hA, bytes32 hB) = _splitMix(r.destId, uint256(uint160(r.author)), r.tipsWei);
+        return keccak256(abi.encodePacked(hA, hB, r.bodyHash, ADDRESS_C, _MIX_2));
+    }
+
+    function _epochReviewWeight() internal view returns (uint256 w) {
+        for (uint256 i = 1; i <= 26; ++i) {
+            w += destinations[i].reputationSum;
+        }
+    }
+
+    function _seedDestinations() internal {
+        destinations[1] = BrdxDestination({
+            phase: BrdxDestPhase.Live,
+            tierBand: uint8(1),
+            openedAt: uint64(block.timestamp),
+            reviewCount: 0,
+            scrapeCount: 0,
+            reputationSum: 20,
+            placeTag: 0xdbba9d86e72c3c4522dca7e9c008a46bf851c859f8fa3a48867f12921d6b5ea9
+        });
+        emit Opened(1, 0xdbba9d86e72c3c4522dca7e9c008a46bf851c859f8fa3a48867f12921d6b5ea9, uint8(1));
+        destinations[2] = BrdxDestination({
+            phase: BrdxDestPhase.Live,
