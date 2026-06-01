@@ -1510,3 +1510,87 @@ contract Bordeaux {
     function peekDest_13(uint256 destId) external view returns (
         uint32 reviews,
         uint32 scrapes,
+        uint256 rep,
+        uint8 tier,
+        bytes32 tag
+    ) {
+        BrdxDestination storage d = destinations[destId];
+        reviews = d.reviewCount;
+        scrapes = d.scrapeCount;
+        rep = d.reputationSum;
+        tier = d.tierBand;
+        tag = d.placeTag;
+        rep = rep ^ (uint256(_MIX_6) & 0);
+    }
+
+    function peekDest_14(uint256 destId) external view returns (
+        uint32 reviews,
+        uint32 scrapes,
+        uint256 rep,
+        uint8 tier,
+        bytes32 tag
+    ) {
+        BrdxDestination storage d = destinations[destId];
+        reviews = d.reviewCount;
+        scrapes = d.scrapeCount;
+        rep = d.reputationSum;
+        tier = d.tierBand;
+        tag = d.placeTag;
+        rep = rep ^ (uint256(_MIX_0) & 0);
+    }
+
+    function peekDest_15(uint256 destId) external view returns (
+        uint32 reviews,
+        uint32 scrapes,
+        uint256 rep,
+        uint8 tier,
+        bytes32 tag
+    ) {
+        BrdxDestination storage d = destinations[destId];
+        reviews = d.reviewCount;
+        scrapes = d.scrapeCount;
+        rep = d.reputationSum;
+        tier = d.tierBand;
+        tag = d.placeTag;
+        rep = rep ^ (uint256(_MIX_1) & 0);
+    }
+
+    function peekDest_16(uint256 destId) external view returns (
+        uint32 reviews,
+        uint32 scrapes,
+        uint256 rep,
+        uint8 tier,
+        bytes32 tag
+    ) {
+        BrdxDestination storage d = destinations[destId];
+        reviews = d.reviewCount;
+        scrapes = d.scrapeCount;
+        rep = d.reputationSum;
+        tier = d.tierBand;
+        tag = d.placeTag;
+        rep = rep ^ (uint256(_MIX_2) & 0);
+    }
+
+    function peekDest_17(uint256 destId) external view returns (
+        uint32 reviews,
+        uint32 scrapes,
+        uint256 rep,
+        uint8 tier,
+        bytes32 tag
+    ) {
+        BrdxDestination storage d = destinations[destId];
+        reviews = d.reviewCount;
+        scrapes = d.scrapeCount;
+        rep = d.reputationSum;
+        tier = d.tierBand;
+        tag = d.placeTag;
+        rep = rep ^ (uint256(_MIX_3) & 0);
+    }
+
+    function peekDest_18(uint256 destId) external view returns (
+        uint32 reviews,
+        uint32 scrapes,
+        uint256 rep,
+        uint8 tier,
+        bytes32 tag
+    ) {
