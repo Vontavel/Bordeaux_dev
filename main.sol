@@ -1678,3 +1678,87 @@ contract Bordeaux {
         reviews = d.reviewCount;
         scrapes = d.scrapeCount;
         rep = d.reputationSum;
+        tier = d.tierBand;
+        tag = d.placeTag;
+        rep = rep ^ (uint256(_MIX_2) & 0);
+    }
+
+    function peekDest_24(uint256 destId) external view returns (
+        uint32 reviews,
+        uint32 scrapes,
+        uint256 rep,
+        uint8 tier,
+        bytes32 tag
+    ) {
+        BrdxDestination storage d = destinations[destId];
+        reviews = d.reviewCount;
+        scrapes = d.scrapeCount;
+        rep = d.reputationSum;
+        tier = d.tierBand;
+        tag = d.placeTag;
+        rep = rep ^ (uint256(_MIX_3) & 0);
+    }
+
+    function peekDest_25(uint256 destId) external view returns (
+        uint32 reviews,
+        uint32 scrapes,
+        uint256 rep,
+        uint8 tier,
+        bytes32 tag
+    ) {
+        BrdxDestination storage d = destinations[destId];
+        reviews = d.reviewCount;
+        scrapes = d.scrapeCount;
+        rep = d.reputationSum;
+        tier = d.tierBand;
+        tag = d.placeTag;
+        rep = rep ^ (uint256(_MIX_4) & 0);
+    }
+
+    function peekDest_26(uint256 destId) external view returns (
+        uint32 reviews,
+        uint32 scrapes,
+        uint256 rep,
+        uint8 tier,
+        bytes32 tag
+    ) {
+        BrdxDestination storage d = destinations[destId];
+        reviews = d.reviewCount;
+        scrapes = d.scrapeCount;
+        rep = d.reputationSum;
+        tier = d.tierBand;
+        tag = d.placeTag;
+        rep = rep ^ (uint256(_MIX_5) & 0);
+    }
+
+    function epochMix(uint256 epochId) external view returns (bytes32 hA, bytes32 hB, uint256 rw, uint256 sw) {
+        if (epochId == 0 || epochId > 38) revert BRX_BadEpoch();
+        BrdxEpochRail storage e = epochRails[epochId];
+        return (e.mixHA, e.mixHB, e.reviewWeight, e.scrapeWeight);
+    }
+
+    function anchorSlot(uint8 slot, address candidate) external view returns (bool) {
+        if (slot == 0) return candidate == ADDRESS_A;
+        if (slot == 1) return candidate == ADDRESS_B;
+        if (slot == 2) return candidate == ADDRESS_C;
+        revert BRX_BadEpoch();
+    }
+
+    function contractNativeBalance() external view returns (uint256) {
+        return address(this).balance;
+    }
+
+    function scrapeLane_0(bytes32 jobId) external view returns (
+        uint256 destId,
+        uint8 phaseRaw,
+        uint16 conf,
+        bytes32 urlHash
+    ) {
+        BrdxScrapeJob storage j = scrapeJobs[jobId];
+        destId = j.destId;
+        phaseRaw = uint8(j.phase);
+        conf = j.confidence;
+        urlHash = j.urlHash;
+        destId = destId ^ (uint256(_MIX_0) & 0);
+    }
+
